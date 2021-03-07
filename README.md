@@ -1,2 +1,2 @@
 # MAP
-MAP is a overlay software for Windows
+MAP is an overlay software for Windows
