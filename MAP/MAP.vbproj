@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FC39EBD8-9335-4332-827E-DA672ACC628E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>MAP.My.MyApplication</StartupObject>
+    <RootNamespace>MAP</RootNamespace>
+    <AssemblyName>MAP</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Text</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\LogoRed.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>MAP_key.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Internet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GraphicsModule.vb" />
+    <Compile Include="LayeredWindow.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Module.vb" />
+    <Compile Include="Modules\HardwareInfosModule.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\BitManipulator.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\ComParser.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\Globals.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\ID3v1Tag.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\ID3v2Tag.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\MP3File.vb" />
+    <Compile Include="Modules\MusicModule\ID3 Tags\MpegInfo.vb" />
+    <Compile Include="Overlay.vb" />
+    <Compile Include="Overlays\ImageOverlay.vb" />
+    <Compile Include="Overlays\RectangleOverlay.vb" />
+    <Compile Include="Overlays\CustomArgumentsList.Designer.vb">
+      <DependentUpon>CustomArgumentsList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Overlays\CustomArgumentsList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Overlays\DefaultOverlay.Designer.vb">
+      <DependentUpon>DefaultOverlay.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Overlays\DefaultOverlay.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Overlays\Custom.vb" />
+    <Compile Include="Overlays\MusicOverlay\MusicThumbnails.vb" />
+    <Compile Include="Overlays\MusicOverlay\MusicFrequencies.vb" />
+    <Compile Include="Overlays\OldDefaultOverlay.Designer.vb">
+      <DependentUpon>OldDefaultOverlay.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Overlays\OldDefaultOverlay.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Overlays\Progressbar.vb" />
+    <Compile Include="Program.vb" />
+    <Compile Include="ReadonlyTextboxDialog.Designer.vb">
+      <DependentUpon>ReadonlyTextboxDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ReadonlyTextboxDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Simple3Des.vb" />
+    <Compile Include="StringExtensions.vb" />
+    <Compile Include="Win32.vb" />
+    <Compile Include="ZoneConfig.Designer.vb">
+      <DependentUpon>ZoneConfig.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ZoneConfig.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modules\MusicModule\MusicModule.vb" />
+    <Compile Include="OverlayGestion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OverlayGestion.Designer.vb">
+      <DependentUpon>OverlayGestion.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="libZPlay.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Settings.Designer.vb">
+      <DependentUpon>Settings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modules\MusicModule\MusicModulePlaylist.Designer.vb">
+      <DependentUpon>MusicModulePlaylist.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\MusicModule\MusicModulePlaylist.vb">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LayeredWindow.resx">
+      <DependentUpon>LayeredWindow.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Overlays\CustomArgumentsList.resx">
+      <DependentUpon>CustomArgumentsList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Overlays\DefaultOverlay.resx">
+      <DependentUpon>DefaultOverlay.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Overlays\OldDefaultOverlay.resx">
+      <DependentUpon>OldDefaultOverlay.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReadonlyTextboxDialog.resx">
+      <DependentUpon>ReadonlyTextboxDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ZoneConfig.resx">
+      <DependentUpon>ZoneConfig.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OverlayGestion.resx">
+      <DependentUpon>OverlayGestion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings.resx">
+      <DependentUpon>Settings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\MusicModule\MusicModulePlaylist.resx">
+      <DependentUpon>MusicModulePlaylist.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MAP_key.pfx" />
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logo x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hardware infos logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shuffle x32.png" />
+    <None Include="Resources\Repeat x32.png" />
+    <None Include="Resources\Repeat one x32.png" />
+    <None Include="Resources\Normal x32.png" />
+    <None Include="Resources\LogoRed.ico" />
+    <None Include="Resources\music_player.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

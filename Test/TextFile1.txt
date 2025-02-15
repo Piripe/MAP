@@ -1,0 +1,417 @@
+﻿
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		Dim flag2 As Boolean = (Me.m_renderCtrlBG OrElse Me.m_useBackgroundEx) AndAlso Render
+				If flag2 Then
+					Dim flag3 As Boolean = Me.m_backgroundEx IsNot Nothing
+					If flag3 Then
+						Me.m_backgroundEx.Dispose()
+						Me.m_backgroundEx = Nothing
+					End If
+					Dim flag4 As Boolean = Me.m_backgroundFull IsNot Nothing
+					If flag4 Then
+						Me.m_backgroundFull.Dispose()
+						Me.m_backgroundFull = Nothing
+					End If
+					Dim flag5 As Boolean = Me.m_sizeMode = AlphaForm.SizeModes.Clip
+					If flag5 Then
+						Me.m_backgroundEx = New Bitmap(Me.m_background)
+					Else
+						Me.m_backgroundEx = New Bitmap(Me.m_background, width, height)
+					End If
+					Me.m_backgroundFull = New Bitmap(Me.m_backgroundEx)
+				End If
+				Dim renderCtrlBG As Boolean = Me.m_renderCtrlBG
+				If renderCtrlBG Then
+					If Render Then
+						Dim g As Graphics = Graphics.FromImage(Me.m_backgroundEx)
+						For Each kvp As KeyValuePair(Of Control, Boolean) In Me.m_controlDict
+							Dim ctrl As Control = kvp.Key
+							Dim drawBack As Boolean = kvp.Value
+							Dim flag6 As Boolean = drawBack AndAlso ctrl.BackColor = Color.Transparent
+							If flag6 Then
+								Dim rect As Rectangle = ctrl.ClientRectangle
+								rect.X = ctrl.Left
+								rect.Y = ctrl.Top
+								g.FillRectangle(Brushes.Fuchsia, rect)
+							End If
+						Next
+						g.Dispose()
+						Me.m_backgroundEx.MakeTransparent(Color.Fuchsia)
+					End If
+					Me.m_useBackgroundEx = True
+				End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+		' Token: 0x0600003A RID: 58 RVA: 0x00002904 File Offset: 0x00000B04
+		Private Sub updateLayeredSize(width As Integer, height As Integer)
+			Me.updateLayeredSize(width, height, False)
+		End Sub
+
+		' Token: 0x0600003B RID: 59 RVA: 0x00002914 File Offset: 0x00000B14
+		Private Sub updateLayeredSize(width As Integer, height As Integer, forceUpdate As Boolean)
+			Dim flag As Boolean = Not Me.m_initialised
+			If Not flag Then
+				Dim flag2 As Boolean = Not forceUpdate AndAlso width = Me.m_layeredWnd.LayeredSize.Width AndAlso height = Me.m_layeredWnd.LayeredSize.Height
+				If Not flag2 Then
+					Select Case Me.m_sizeMode
+						Case AlphaForm.SizeModes.Stretch
+							Me.updateLayeredBackground(width, height)
+							MyBase.Invalidate(False)
+						Case AlphaForm.SizeModes.Clip
+							Dim _opacity As Byte = CByte((MyBase.Opacity * 255.0))
+							Dim useBackgroundEx As Boolean = Me.m_useBackgroundEx
+							If useBackgroundEx Then
+								Me.m_layeredWnd.UpdateWindow(Me.m_backgroundEx, _opacity, width, height, Me.m_layeredWnd.LayeredPos)
+							Else
+								Me.m_layeredWnd.UpdateWindow(Me.m_background, _opacity, width, height, Me.m_layeredWnd.LayeredPos)
+							End If
+					End Select
+				End If
+			End If
+		End Sub
+
+		' Token: 0x0600003C RID: 60 RVA: 0x00002A1C File Offset: 0x00000C1C
+		Private Function dblClick(pos As Point) As Boolean
+			Dim elapsed As TimeSpan = DateTime.Now - Me.m_clickTime
+			Dim dist As Size = Nothing
+			dist.Width = Math.Abs(Me.m_lockedPoint.X - pos.X)
+			dist.Height = Math.Abs(Me.m_lockedPoint.Y - pos.Y)
+			Return elapsed.Milliseconds <= SystemInformation.DoubleClickTime AndAlso dist.Width <= SystemInformation.DoubleClickSize.Width AndAlso dist.Height <= SystemInformation.DoubleClickSize.Height
+		End Function
+
+		' Token: 0x0600003D RID: 61 RVA: 0x00002AD4 File Offset: 0x00000CD4
+		Protected Overrides Sub WndProc(ByRef m As Windows.Forms.Message)
+			Dim designMode As Boolean = MyBase.DesignMode
+			If designMode Then
+				MyBase.WndProc(m)
+			Else
+				Dim msgId As Win32.Message = CType(m.Msg, Win32.Message)
+				Dim UseBase As Boolean = True
+				Dim message As Win32.Message = msgId
+				Dim message2 As Win32.Message = message
+				If message2 <= Win32.Message.WM_WINDOWPOSCHANGING Then
+					If message2 <> Win32.Message.WM_SIZE Then
+						If message2 <> Win32.Message.WM_ACTIVATE Then
+							If message2 = Win32.Message.WM_WINDOWPOSCHANGING Then
+								Dim posInfo As Win32.WINDOWPOS = CType(Marshal.PtrToStructure(m.LParam, GetType(Win32.WINDOWPOS)), Win32.WINDOWPOS)
+								Dim move_size As Win32.WindowPosFlags = Win32.WindowPosFlags.SWP_NOSIZE Or Win32.WindowPosFlags.SWP_NOMOVE
+								Dim flag As Boolean = (posInfo.flags And move_size) <> move_size
+								If flag Then
+									Dim flag2 As Boolean = posInfo.hwndInsertAfter <> MyBase.Handle
+									If flag2 Then
+										Dim hwdp As IntPtr = Win32.BeginDeferWindowPos(2)
+										Dim flag3 As Boolean = hwdp <> IntPtr.Zero
+										If flag3 Then
+											hwdp = Win32.DeferWindowPos(hwdp, Me.m_layeredWnd.Handle, MyBase.Handle, posInfo.x + Me.m_offX, posInfo.y + Me.m_offY, 0, 0, CUInt((posInfo.flags Or Win32.WindowPosFlags.SWP_NOSIZE Or Win32.WindowPosFlags.SWP_NOZORDER)))
+										End If
+										Dim flag4 As Boolean = hwdp <> IntPtr.Zero
+										If flag4 Then
+											hwdp = Win32.DeferWindowPos(hwdp, MyBase.Handle, MyBase.Handle, posInfo.x, posInfo.y, posInfo.cx, posInfo.cy, CUInt((posInfo.flags Or Win32.WindowPosFlags.SWP_NOZORDER)))
+										End If
+										Dim flag5 As Boolean = hwdp <> IntPtr.Zero
+										If flag5 Then
+											Win32.EndDeferWindowPos(hwdp)
+										End If
+										Me.m_layeredWnd.LayeredPos = New Point(posInfo.x + Me.m_offX, posInfo.y + Me.m_offY)
+										posInfo.flags = posInfo.flags Or Win32.WindowPosFlags.SWP_NOMOVE
+										Marshal.StructureToPtr(posInfo, m.LParam, True)
+									End If
+									Dim flag6 As Boolean = (posInfo.flags And Win32.WindowPosFlags.SWP_NOSIZE) = Win32.WindowPosFlags.NONE
+									If flag6 Then
+										Dim diffX As Integer = posInfo.cx - MyBase.Size.Width
+										Dim diffY As Integer = posInfo.cy - MyBase.Size.Height
+										Dim flag7 As Boolean = diffX <> 0 OrElse diffY <> 0
+										If flag7 Then
+											Me.updateLayeredSize(MyBase.ClientSize.Width + diffX, MyBase.ClientSize.Height + diffY)
+										End If
+									End If
+									UseBase = False
+								End If
+							End If
+						Else
+							Dim flag8 As Boolean = m.WParam <> IntPtr.Zero
+							If flag8 Then
+								Dim prevWnd As IntPtr = Win32.GetWindow(Me.m_layeredWnd.Handle, Win32.GetWindow_Cmd.GW_HWNDPREV)
+								While prevWnd <> IntPtr.Zero
+									Dim flag9 As Boolean = Win32.IsWindowVisible(prevWnd)
+									If flag9 Then
+										Exit While
+									End If
+									prevWnd = Win32.GetWindow(prevWnd, Win32.GetWindow_Cmd.GW_HWNDPREV)
+								End While
+								Dim flag10 As Boolean = prevWnd <> MyBase.Handle
+								If flag10 Then
+									Win32.SetWindowPos(Me.m_layeredWnd.Handle, MyBase.Handle, 0, 0, 0, 0, 1043UI)
+								End If
+							End If
+						End If
+					Else
+						Dim width As Integer = m.LParam.ToInt32() And 65535
+						Dim height As Integer = m.LParam.ToInt32() >> 16
+						Me.updateLayeredSize(width, height)
+					End If
+				ElseIf message2 <= Win32.Message.WM_LBUTTONUP Then
+					If message2 <> Win32.Message.WM_MOUSEMOVE Then
+						If message2 = Win32.Message.WM_LBUTTONUP Then
+							Dim flag11 As Boolean = Win32.GetCapture() <> IntPtr.Zero
+							If flag11 Then
+								Win32.ReleaseCapture()
+							End If
+						End If
+					Else
+						Dim flag12 As Boolean = Win32.GetCapture() <> IntPtr.Zero AndAlso Me.m_moving
+						If flag12 Then
+							Dim enhanced As Boolean = Me.m_enhanced
+							If enhanced Then
+								Dim hdcScreen As IntPtr = Win32.GetWindowDC(Me.m_layeredWnd.Handle)
+								Dim windowDC As IntPtr = Win32.GetDC(MyBase.Handle)
+								Dim memDC As IntPtr = Win32.CreateCompatibleDC(windowDC)
+								Dim BmpMask As IntPtr = Win32.CreateBitmap(MyBase.ClientSize.Width, MyBase.ClientSize.Height, 1UI, 1UI, IntPtr.Zero)
+								Dim backImage As Bitmap = If(Me.m_useBackgroundEx, Me.m_backgroundFull, Me.m_background)
+								Dim BmpBack As IntPtr = backImage.GetHbitmap(Color.FromArgb(0))
+								Win32.SelectObject(memDC, BmpMask)
+								Dim oldCol As UInteger = Win32.SetBkColor(windowDC, 16711935UI)
+								Win32.BitBlt(memDC, 0, 0, MyBase.ClientSize.Width, MyBase.ClientSize.Height, windowDC, 0, 0, Win32.TernaryRasterOperations.SRCCOPY)
+								Win32.SetBkColor(windowDC, oldCol)
+								Win32.SelectObject(memDC, BmpBack)
+								Dim brush As IntPtr = Win32.CreateSolidBrush(16777215UI)
+								Win32.SelectObject(memDC, brush)
+								Win32.MaskBlt(memDC, 0, 0, backImage.Width, backImage.Height, windowDC, 0, 0, BmpMask, 0, 0, 3484024864UI)
+								Dim zero As Point = New Point(0, 0)
+								Dim size As Size = Me.m_layeredWnd.LayeredSize
+								Dim pos As Point = Me.m_layeredWnd.LayeredPos
+								Dim blend As Win32.BLENDFUNCTION = Nothing
+								blend.AlphaFormat = 1
+								blend.BlendFlags = 0
+								blend.BlendOp = 0
+								blend.SourceConstantAlpha = CByte((MyBase.Opacity * 255.0))
+								Win32.UpdateLayeredWindow(Me.m_layeredWnd.Handle, hdcScreen, pos, size, memDC, zero, 0, blend, Win32.BlendFlags.ULW_ALPHA)
+								Win32.ReleaseDC(IntPtr.Zero, hdcScreen)
+								Win32.ReleaseDC(MyBase.Handle, windowDC)
+								Win32.DeleteDC(memDC)
+								Win32.DeleteObject(brush)
+								Win32.DeleteObject(BmpMask)
+								Win32.DeleteObject(BmpBack)
+								MyBase.SuspendLayout()
+								For Each obj As Object In MyBase.Controls
+									Dim ctrl As Control = CType(obj, Control)
+									Dim visible As Boolean = ctrl.Visible
+									If visible Then
+										Me.m_hiddenControls.Add(ctrl)
+										ctrl.Visible = False
+									End If
+								Next
+								MyBase.ResumeLayout()
+							End If
+							Win32.ReleaseCapture()
+							Win32.SendMessage(MyBase.Handle, 161, 2, 0)
+						End If
+					End If
+				ElseIf message2 <> Win32.Message.WM_ENTERSIZEMOVE Then
+					If message2 = Win32.Message.WM_EXITSIZEMOVE Then
+						Me.m_isDown.Left = False
+						Me.m_moving = False
+						Dim enhanced2 As Boolean = Me.m_enhanced
+						If enhanced2 Then
+							MyBase.SuspendLayout()
+							For Each ctrl2 As Control In Me.m_hiddenControls
+								ctrl2.Visible = True
+							Next
+							Me.m_hiddenControls.Clear()
+							MyBase.ResumeLayout()
+							Me.updateLayeredBackground(MyBase.ClientSize.Width, MyBase.ClientSize.Height, Me.m_layeredWnd.LayeredPos, False)
+						End If
+					End If
+				End If
+				Dim flag13 As Boolean = UseBase
+				If flag13 Then
+					MyBase.WndProc(m)
+				End If
+			End If
+		End Sub
+
+		' Token: 0x0600003E RID: 62 RVA: 0x000031C0 File Offset: 0x000013C0
+		Private Function LayeredWindowWndProc(hWnd As IntPtr, Msg As Integer, wParam As Integer, lParam As Integer) As Integer
+			Dim mousePos As Point = MyBase.PointToClient(Cursor.Position)
+			Dim result As Integer
+			If Msg <> 32 Then
+				If Msg = 513 Then
+					Debugger.Break()
+				End If
+				result = Win32.CallWindowProc(Me.m_layeredWindowProc, hWnd, Msg, wParam, lParam)
+			Else
+				Win32.SetCursor(Win32.LoadCursor(IntPtr.Zero, Win32.SystemCursor.IDC_NORMAL))
+				Dim e As MouseEventArgs = Nothing
+				Dim mouseEvent_ As AlphaForm.delMouseEvent = Nothing
+				Dim stdEvent As AlphaForm.delStdEvent = Nothing
+				Dim MouseEvent As Win32.Message = CType((lParam >> 16), Win32.Message)
+				Select Case mouseEvent
+					Case Win32.Message.WM_MOUSEMOVE
+						Dim flag As Boolean = Me.m_isDown.Left AndAlso Me.m_lockedPoint <> mousePos
+						If flag Then
+							Debug.WriteLine("Setting Capture")
+							Win32.SetCapture(MyBase.Handle)
+							Me.m_moving = True
+						Else
+							e = New MouseEventArgs(MouseButtons.None, 0, mousePos.X, mousePos.Y, 0)
+							mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseMove)
+						End If
+					Case Win32.Message.WM_LBUTTONDOWN
+						If m_lastClickMsg = MouseEvent AndAlso Not m_isDown.Left And dblClick(mousePos) Then
+							e = New MouseEventArgs(MouseButtons.Left, 2, mousePos.X, mousePos.Y, 0)
+							mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDoubleClick)
+							stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnDoubleClick)
+							Me.m_lastClickMsg = Win32.Message.HWND_TOP
+						Else
+							Dim flag3 As Boolean = Not Me.m_isDown.Left
+							If flag3 Then
+								e = New MouseEventArgs(MouseButtons.Left, 1, mousePos.X, mousePos.Y, 0)
+								mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDown)
+								Me.m_lastClickMsg = MouseEvent
+							End If
+						End If
+						Me.m_clickTime = DateTime.Now
+						Me.m_lockedPoint = mousePos
+						Me.m_isDown.Left = True
+					Case Win32.Message.WM_LBUTTONUP
+						e = New MouseEventArgs(MouseButtons.Left, 1, mousePos.X, mousePos.Y, 0)
+						mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseClick)
+						stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnClick)
+						Me.m_isDown.Left = False
+					Case Win32.Message.WM_RBUTTONDOWN
+						If Me.m_lastClickMsg = MouseEvent AndAlso Not Me.m_isDown.Right AndAlso Me.dblClick(mousePos) Then
+							e = New MouseEventArgs(MouseButtons.Right, 2, mousePos.X, mousePos.Y, 0)
+							mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDoubleClick)
+							stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnDoubleClick)
+							Me.m_lastClickMsg = Win32.Message.HWND_TOP
+						Else
+							Dim flag5 As Boolean = Not Me.m_isDown.Right
+							If flag5 Then
+								e = New MouseEventArgs(MouseButtons.Right, 1, mousePos.X, mousePos.Y, 0)
+								mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDown)
+								Me.m_lastClickMsg = MouseEvent
+								Me.m_clickTime = DateTime.Now
+								Me.m_lockedPoint = mousePos
+							End If
+						End If
+						Me.m_isDown.Right = True
+					Case Win32.Message.WM_RBUTTONUP
+						e = New MouseEventArgs(MouseButtons.Right, 1, mousePos.X, mousePos.Y, 0)
+						mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseClick)
+						stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnClick)
+						Me.m_isDown.Right = False
+					Case Win32.Message.WM_MBUTTONDOWN
+						Dim flag6 As Boolean = Me.m_lastClickMsg = MouseEvent AndAlso Not Me.m_isDown.Middle AndAlso Me.dblClick(mousePos)
+						If flag6 Then
+							e = New MouseEventArgs(MouseButtons.Middle, 2, mousePos.X, mousePos.Y, 0)
+							mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDoubleClick)
+							stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnDoubleClick)
+							Me.m_lastClickMsg = Win32.Message.HWND_TOP
+						Else
+							Dim flag7 As Boolean = Not Me.m_isDown.Middle
+							If flag7 Then
+								e = New MouseEventArgs(MouseButtons.Middle, 1, mousePos.X, mousePos.Y, 0)
+								mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDown)
+								Me.m_lastClickMsg = MouseEvent
+								Me.m_clickTime = DateTime.Now
+								Me.m_lockedPoint = mousePos
+							End If
+						End If
+						Me.m_isDown.Middle = True
+					Case Win32.Message.WM_MBUTTONUP
+						e = New MouseEventArgs(MouseButtons.Middle, 1, mousePos.X, mousePos.Y, 0)
+						mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseClick)
+						stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnClick)
+						Me.m_isDown.Middle = False
+					Case Win32.Message.WM_XBUTTONDOWN
+						If Me.m_lastClickMsg = MouseEvent AndAlso Not Me.m_isDown.XBtn AndAlso Me.dblClick(mousePos) Then
+							e = New MouseEventArgs(MouseButtons.XButton1, 2, mousePos.X, mousePos.Y, 0)
+							mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDoubleClick)
+							stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnDoubleClick)
+							Me.m_lastClickMsg = Win32.Message.HWND_TOP
+						Else
+							Dim flag9 As Boolean = Not Me.m_isDown.XBtn
+							If flag9 Then
+								e = New MouseEventArgs(MouseButtons.XButton1, 1, mousePos.X, mousePos.Y, 0)
+								mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseDown)
+								Me.m_lastClickMsg = MouseEvent
+								Me.m_clickTime = DateTime.Now
+								Me.m_lockedPoint = mousePos
+							End If
+						End If
+						Me.m_isDown.XBtn = True
+					Case Win32.Message.WM_XBUTTONUP
+						e = New MouseEventArgs(MouseButtons.XButton1, 1, mousePos.X, mousePos.Y, 0)
+						mouseEvent_ = New AlphaForm.delMouseEvent(AddressOf Me.OnMouseClick)
+						stdEvent = New AlphaForm.delStdEvent(AddressOf Me.OnClick)
+						Me.m_isDown.XBtn = False
+				End Select
+				Dim mouseDown As Boolean = Me.m_isDown.Left OrElse Me.m_isDown.Middle OrElse Me.m_isDown.Right OrElse Me.m_isDown.XBtn
+				Dim flag10 As Boolean = mouseDown AndAlso Form.ActiveForm Is Nothing
+				If flag10 Then
+					MyBase.Activate()
+				End If
+				Dim flag11 As Boolean = e IsNot Nothing
+				If flag11 Then
+					Dim flag12 As Boolean = mouseEvent_ IsNot Nothing
+					If flag12 Then
+						MyBase.BeginInvoke(mouseEvent_, New Object() {e})
+					End If
+					Dim flag13 As Boolean = stdEvent IsNot Nothing
+					If flag13 Then
+						MyBase.BeginInvoke(stdEvent, New Object() {e})
+					End If
+				End If
+				result = 0
+			End If
+			Return result
+		End Function
